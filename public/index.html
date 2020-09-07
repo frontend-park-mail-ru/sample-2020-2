@@ -13,19 +13,6 @@
       <button id="button">Click me!</button>
     </div>
   </div>
-  <script>
-    const button = document.querySelector('#button');
-    const handler = () => {
-      console.log('click2');
-
-      button.removeEventListener('click', handler);
-    }
-
-    button.addEventListener('click', handler);
-
-    button.addEventListener('click', () => {
-      console.log('click3');
-    });
-  </script>
+  <script src="/main.js"></script>
 </body>
 </html>

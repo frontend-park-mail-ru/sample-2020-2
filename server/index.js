@@ -4,7 +4,7 @@ const http = require('http');
 const server = http.createServer((req, res) => {
   console.log('requested', req.url);
 
-  const path = `.${req.url === '/' ? '/index.html' : req.url}`;
+  const path = `./public${req.url === '/' ? '/index.html' : req.url}`;
 
   const ip = res.socket.remoteAddress;
   const port = res.socket.remotePort;
