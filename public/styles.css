@@ -1,0 +1,10 @@
+h1 {
+  color: #cc0000;
+}
+
+.wrapper {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
