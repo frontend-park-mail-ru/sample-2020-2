@@ -1,5 +1,6 @@
 'use strict';
 
+const childProc = require('child_process');
 const express = require('express');
 const body = require('body-parser');
 const cookie = require('cookie-parser');
@@ -40,7 +41,7 @@ const users = {
     score: 72,
     images: [
       'https://instagram.fhel6-1.fna.fbcdn.net/v/t51.2885-15/e35/20065516_1579389418799307_5149198199109451776_n.jpg?_nc_ht=instagram.fhel6-1.fna.fbcdn.net&_nc_cat=103&_nc_ohc=ktWZc__XFUQAX-fWvkE&oh=12bcfb9bc4a65628f62376f40847fdd1&oe=5F8962D5',
-      'https://scontent-hel2-1.cdninstagram.com/v/t51.2885-15/e35/19227380_1507297899309545_1356320152039194624_n.jpg?_nc_ht=scontent-hel2-1.cdninstagram.com&_nc_cat=105&_nc_ohc=5nqW5DMDUrcAX-BDGUM&oh=8b26f75b09a96fe114341f528ffbfd94&oe=5F8954D2',
+      'https://images.immediate.co.uk/production/volatile/sites/3/2019/05/EBC1840_v228.1047-eb60675.jpg?quality=90&resize=768,574',
       'https://instagram.fhel6-1.fna.fbcdn.net/v/t51.2885-15/e35/16583858_168051673696142_846500378588479488_n.jpg?_nc_ht=instagram.fhel6-1.fna.fbcdn.net&_nc_cat=102&_nc_ohc=3_Oaa6iUOlMAX_Q32lA&oh=a4e5587c32edc6bb11b33cd41866cb67&oe=5F87899B',
     ],
   },
@@ -49,6 +50,17 @@ const users = {
     password: 'password',
     age: 21,
     score: 72,
+  },
+  'i.drujinin@corp.mail.ru': {
+    email: 'i.drujinin@corp.mail.ru',
+    password: 'qwerty',
+    age: 26,
+    score: 123,
+    images: [
+      'https://snworksceo.imgix.net/car/614a86c8-405f-4fd8-b60d-93998c769661.sized-1000x1000.jpg?w=1000',
+      'https://instagram.fhrk1-1.fna.fbcdn.net/v/t51.2885-15/e35/p1080x1080/80647096_1424554687699858_646400561738833743_n.jpg?_nc_ht=instagram.fhrk1-1.fna.fbcdn.net&_nc_cat=110&_nc_ohc=zBLMvZfRiZUAX-ZD22X&_nc_tp=19&oh=7fadb14e85f3756e3855560ae8df99d2&oe=5F9A6763',
+      'https://instagram.fhrk1-1.fna.fbcdn.net/v/t51.2885-15/e35/p1080x1080/82181161_636588197145749_1924661975512329_n.jpg?_nc_ht=instagram.fhrk1-1.fna.fbcdn.net&_nc_cat=105&_nc_ohc=SA9sFqCW1C0AX8rN0Hh&_nc_tp=19&oh=bcd10c134563a377f82ca39d30a89db4&oe=5F9D8F88',
+    ],
   },
 };
 const ids = {};
@@ -111,4 +123,7 @@ const port = process.env.PORT || 3000;
 
 app.listen(port, function () {
   console.log(`Server listening port ${port}`);
+  childProc.exec(`open -a "Google Chrome" http://localhost:${port}`, (err) => {
+    console.log({err});
+  });
 });

@@ -1,4 +1,6 @@
-console.log('topkek');
+import {ProfilePage, RENDER_METHOD} from './components/ProfilePage/ProfilePage.js';
+
+const {ajaxGet, ajaxPost} = globalThis.AjaxModule;
 
 const application = document.getElementById('app');
 
@@ -50,26 +52,6 @@ function menuPage() {
     ;
 }
 
-function ajax(method, url, body = null, callback) {
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, url, true);
-    xhr.withCredentials = true;
-
-    xhr.addEventListener('readystatechange', function() {
-        if (xhr.readyState !== XMLHttpRequest.DONE) return;
-
-        callback(xhr.status, xhr.responseText);
-    });
-
-    if (body) {
-        xhr.setRequestHeader('Content-type', 'application/json; charset=utf8');
-        xhr.send(JSON.stringify(body));
-        return;
-    }
-
-    xhr.send();
-}
-
 function signupPage() {
     application.innerHTML = '';
 
@@ -95,6 +77,27 @@ function signupPage() {
     form.appendChild(back);
 
     application.appendChild(form);
+
+    form.addEventListener('submit', (evt) => {
+        evt.preventDefault();
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+        const age = +ageInput.value;
+
+        ajaxPost({
+            url: '/signup',
+            body: {email, password, age},
+            callback: (status, response) => {
+                if (status === 201) {
+                    profilePage();
+                } else {
+                    const {error} = JSON.parse(response);
+                    alert(error);
+                }
+            }
+        })
+    });
 }
 
 function loginPage() {
@@ -124,11 +127,10 @@ function loginPage() {
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
 
-        ajax(
-            'POST',
-            '/login',
-            {email, password},
-            (status, response) => {
+        ajaxPost({
+            url: '/login',
+            body: {email, password},
+            callback: (status, response) => {
                 if (status === 200) {
                     profilePage();
                 } else {
@@ -136,8 +138,7 @@ function loginPage() {
                     alert(error);
                 }
             }
-        )
-
+        })
     });
 
 
@@ -147,7 +148,7 @@ function loginPage() {
 function profilePage() {
     application.innerHTML = '';
 
-    ajax('GET', '/me', null, (status, responseText) => {
+    ajaxGet({url: '/me', body: null, callback: (status, responseText) => {
        let isAuthorized = false;
 
        if (status === 200) {
@@ -162,34 +163,16 @@ function profilePage() {
        if (isAuthorized) {
            const responseBody = JSON.parse(responseText);
 
-           const span = document.createElement('span');
-           span.textContent = `Мне ${responseBody.age} и я крутой на ${responseBody.score} очков`;
-           application.appendChild(span);
-
-           const back = document.createElement('a');
-           back.href = '/menu';
-           back.textContent = 'Назад';
-           back.dataset.section = 'menu';
-
-           application.appendChild(back);
-
-           const {images} = responseBody;
-
-           if (images && Array.isArray(images)) {
-               const div = document.createElement('div');
-               application.appendChild(div);
-
-               images.forEach((imageSrc) => {
-                   div.innerHTML += `<img src="${imageSrc}" />`;
-               });
-           }
+           const profile = new ProfilePage(application);
+           profile.data = responseBody;
+           profile.render(RENDER_METHOD.STRING);
 
            return;
        }
 
        alert('АХТУНГ, нет авторизации');
        loginPage();
-    });
+    }});
 }
 
 function createInput(type, text, name) {
