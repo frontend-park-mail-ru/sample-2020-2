@@ -10,6 +10,34 @@
             this.#ajax({method: 'POST', ...ajaxArgs});
         }
 
+        ajaxGetPromisified = (ajaxArgs) => {
+            return new Promise((resolve, reject) => {
+                this.#ajax({
+                    ...ajaxArgs,
+                    callback(status, responseText) {
+                        if (status < 300) {
+                            resolve({status, responseText});
+                            return;
+                        }
+
+                        reject({status, responseText});
+                    },
+                })
+            });
+        }
+
+        ajaxGetUsingFetch = async (ajaxArgs) => {
+            const response = await fetch(ajaxArgs.url, {
+                method: 'GET',
+            });
+            const parsedJsonObject = await response.json();
+
+            return {
+                status: response.statusCode,
+                responseObject: parsedJsonObject,
+            };
+        }
+
         #ajax({
              method = 'GET',
              url = '/',

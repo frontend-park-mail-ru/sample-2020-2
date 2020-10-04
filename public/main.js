@@ -1,6 +1,6 @@
 import {ProfilePage, RENDER_METHOD} from './components/ProfilePage/ProfilePage.js';
 
-const {ajaxGet, ajaxPost} = globalThis.AjaxModule;
+const {ajaxGet, ajaxPost, ajaxGetPromisified, ajaxGetUsingFetch} = globalThis.AjaxModule;
 
 const application = document.getElementById('app');
 
@@ -148,31 +148,20 @@ function loginPage() {
 function profilePage() {
     application.innerHTML = '';
 
-    ajaxGet({url: '/me', body: null, callback: (status, responseText) => {
-       let isAuthorized = false;
-
-       if (status === 200) {
-           isAuthorized = true;
-       }
-
-       if (status === 401) {
-           isAuthorized = false;
-       }
-
-
-       if (isAuthorized) {
-           const responseBody = JSON.parse(responseText);
-
-           const profile = new ProfilePage(application);
-           profile.data = responseBody;
-           profile.render(RENDER_METHOD.STRING);
-
-           return;
-       }
-
-       alert('АХТУНГ, нет авторизации');
-       loginPage();
-    }});
+    ajaxGetUsingFetch({url: '/me', body: null})
+        .then(({statusCode, responseObject}) => {
+            const profile = new ProfilePage(application);
+            profile.data = responseObject;
+            profile.render(RENDER_METHOD.STRING);
+        })
+        .catch((err) => {
+            if (err instanceof Error) {
+                // handle JSON.parse error
+            }
+            const {statusCode, responseObject} = err;
+            alert(`АХТУНГ, нет авторизации ${JSON.stringify({status, responseObject})}`);
+            loginPage();
+        });
 }
 
 function createInput(type, text, name) {
