@@ -2,14 +2,14 @@
 const CACHE_NAME = 'sampe_sw_2020_2-v1';
 // ссылки на кэшируемые файлы
 const cacheUrls = [
-'/',
-'/index.html',
-'/styles.css',
-'/utils/images.js',
-'/main.js',
-'/components/ProfilePage/ProfilePage.css',
-'/components/ProfilePage/ProfilePage.js',
-'/modules/ajax.js',
+    '/',
+    '/index.html',
+    '/styles.css',
+    '/utils/images.js',
+    '/main.js',
+    '/components/ProfilePage/ProfilePage.css',
+    '/components/ProfilePage/ProfilePage.js',
+    '/modules/ajax.js',
 ];
 
 this.addEventListener('install', (event) => {
