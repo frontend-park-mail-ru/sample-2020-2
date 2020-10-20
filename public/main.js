@@ -1,5 +1,15 @@
 import {ProfilePage, RENDER_METHOD} from './components/ProfilePage/ProfilePage.js';
 
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', {scope: '/'})
+        .then((registration) => {
+            console.log('sw registration on scope:', registration.scope);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+}
+
 const {ajaxGet, ajaxPost, ajaxGetPromisified, ajaxGetUsingFetch} = globalThis.AjaxModule;
 
 const application = document.getElementById('app');
